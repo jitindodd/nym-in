@@ -101,7 +101,6 @@ struct st_mysql;
 
 /******** authentication plugin specific declarations *********/
 #include "plugin_auth_common.h"
-
 struct st_mysql_client_plugin_AUTHENTICATION
 {
   MYSQL_CLIENT_PLUGIN_HEADER
