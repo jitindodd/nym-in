@@ -1,5 +1,5 @@
 #include "ncl.h"
-
+#include "mysql.h"
 #include <string>
 #include <iostream>
 #include <vector>
