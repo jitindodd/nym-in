@@ -22,6 +22,7 @@
     <ClCompile Include="..\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\mysql.h" />
     <ClInclude Include="..\ncl.h" />
   </ItemGroup>
   <ItemGroup>
