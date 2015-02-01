@@ -8,7 +8,7 @@
 bool gNclInitialized=false;	//Global variable to maintain the state of the NCL
 int gHandle=-1; //Global variable to maintain the current connected Nymi handle
 std::vector<NclProvision> gProvisions; //Global vector for storing the list of provisioned Nymi
-bool nigga = true;
+bool discovered = true;
 /*
  Function for handling the events thrown by the NCL
  @param[in] event NclEvent that contains the event type and member variables
@@ -29,7 +29,7 @@ void callback(NclEvent event, void* userData){
 	case NCL_EVENT_DISCOVERY:
 		if (event.find.rssi > -65){
 			std::cout << "log: Nymi found\n";
-			nigga = false;
+			discovered = false;
 			res = nclStopScan(); //Stops scanning to prevent more find events
 			if (res){
 				std::cout << "Stopping Scan successful\n";
@@ -128,7 +128,7 @@ int main(){
 	for(int i = 1; i<5; i++) {
 		waitFor(10);
 		if(i==1){
-			while (nigga){
+			while (discovered){
 				NclBool res=nclStartDiscovery();
 			}
 		}
