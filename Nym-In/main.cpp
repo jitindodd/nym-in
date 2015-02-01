@@ -1,5 +1,4 @@
 #include "ncl.h"
-#include "mysql.h"
 #include <string>
 #include <iostream>
 #include <vector>
@@ -31,15 +30,18 @@ void callback(NclEvent event, void* userData){
 			res = nclStopScan(); //Stops scanning to prevent more find events
 			if (res){
 				std::cout << "Stopping Scan successful\n";
+				
 			}
 			else{
 				std::cout << "Stopping Scan failed\n";
 			}
 
 			gHandle = event.discovery.nymiHandle;
+			
 			res = nclAgree(gHandle); //Initiates the provisioning process with discovered Nymi
 			if (res){
 				std::cout << "Agree request successful\n";
+				
 			}
 			else{
 				std::cout << "Agree request failed\n";
@@ -49,6 +51,7 @@ void callback(NclEvent event, void* userData){
 			std::cout << "Nymi not in range\n";
 		}
 		break;
+
 			
 		case NCL_EVENT_FIND:
 			
@@ -90,6 +93,7 @@ void callback(NclEvent event, void* userData){
 			break;
 		case NCL_EVENT_VALIDATION:
 			std::cout<<"Nymi validated! Now trusted user requests can happen, such as request Symmetric Keys!\n";
+			nclNotify(event.discovery.nymiHandle, NCL_TRUE);
 			break;
 		default: break;
 	}
