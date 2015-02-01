@@ -2,11 +2,12 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <time.h>
 
 bool gNclInitialized=false;	//Global variable to maintain the state of the NCL
 int gHandle=-1; //Global variable to maintain the current connected Nymi handle
 std::vector<NclProvision> gProvisions; //Global vector for storing the list of provisioned Nymi
-
+bool nigga = true;
 /*
  Function for handling the events thrown by the NCL
  @param[in] event NclEvent that contains the event type and member variables
@@ -27,6 +28,7 @@ void callback(NclEvent event, void* userData){
 	case NCL_EVENT_DISCOVERY:
 		if (event.find.rssi > -5){
 			std::cout << "log: Nymi found\n";
+			nigga = false;
 			res = nclStopScan(); //Stops scanning to prevent more find events
 			if (res){
 				std::cout << "Stopping Scan successful\n";
@@ -99,6 +101,11 @@ void callback(NclEvent event, void* userData){
 	}
 }
 
+void waitFor(unsigned int secs) {
+	int retTime = time(0) + secs;     // Get finishing time.
+	while (time(0) < retTime);    // Loop until it arrives.
+}
+
 /*
  Main program function
 */
@@ -117,25 +124,14 @@ int main(){
 	if(!nclInit(callback, NULL, "HelloNymi", NCL_MODE_DEFAULT, stderr)) return -1;
 
 	//Main loop for continuously polling user input
-	while(true){
-		std::string input;
-		std::cin>>input; //retreives and stores user input
-
-		//Ensures no commands are handled until NCL has completed initialization
-		if(!gNclInitialized){
-			std::cout<<"error: NCL didn't finished initializing yet!\n";
-			continue;
-		}
-		if(input=="provision"){
-			NclBool res=nclStartDiscovery();
-			if(res){
-				std::cout<<"Discovery started successfully\n";
-			}
-			else{
-				std::cout<<"Dsicovery failed to start\n";
+	for(int i = 1; i<5; i++) {
+		waitFor(5);
+		if(i==1){
+			while (nigga){
+				NclBool res=nclStartDiscovery();
 			}
 		}
-		else if(input=="agree"){
+		else if(i==2){
 			NclBool res=nclProvision(gHandle, NCL_FALSE);
 			if(res){
 				std::cout<<"Provision request successful\n";
@@ -144,13 +140,13 @@ int main(){
 				std::cout<<"Provisioning failed\n";
 			}
 		}
-		else if(input=="reject"){
+		else if(i==7){
 			//Attempt to disconnect from currently connected Nymi
 			if(!nclDisconnect(gHandle)){
 				std::cout<<"Disconnection Failed!\n";
 			}
 		}
-		else if(input=="validate"){
+		else if(i==3){
 			NclBool res=nclStartFinding(gProvisions.data(), gProvisions.size(), NCL_FALSE);
 			if(res){
 				std::cout<<"Finding started successfully\n";
@@ -159,7 +155,7 @@ int main(){
 				std::cout<<"Finding failed to start\n";
 			}
 		}
-		else if(input=="disconnect"){
+		else if(i==4){
 			if(gHandle==-1){
 				std::cout<<"NEA Not connected to a Nymi. Cannot Disconnect\n";
 				continue;
@@ -173,7 +169,7 @@ int main(){
 				std::cout<<"Disconnection failed\n";
 			}
 		}
-		else if(input=="quit"){
+		else if(i==654){
 			if(gHandle!=-1){
 				nclDisconnect(gHandle);
 			}
