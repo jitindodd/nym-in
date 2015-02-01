@@ -26,7 +26,7 @@ void callback(NclEvent event, void* userData){
 		exit(-1);
 		break;
 	case NCL_EVENT_DISCOVERY:
-		if (event.find.rssi > -5){
+		if (event.find.rssi > -65){
 			std::cout << "log: Nymi found\n";
 			nigga = false;
 			res = nclStopScan(); //Stops scanning to prevent more find events
@@ -125,7 +125,7 @@ int main(){
 
 	//Main loop for continuously polling user input
 	for(int i = 1; i<5; i++) {
-		waitFor(5);
+		waitFor(10);
 		if(i==1){
 			while (nigga){
 				NclBool res=nclStartDiscovery();
